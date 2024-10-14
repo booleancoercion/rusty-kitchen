@@ -80,14 +80,12 @@ pub struct Value {
 
 #[derive(Clone, Debug)]
 pub struct ValueStack {
-    pub number: NonZeroU32,
     pub values: Vec<Value>,
 }
 
 impl ValueStack {
-    fn new(number: NonZeroU32) -> Self {
+    fn new() -> Self {
         Self {
-            number,
             values: vec![],
         }
     }
@@ -472,7 +470,7 @@ impl<'a> RecipeRunner<'a> {
     ) -> Result<&'h mut ValueStack> {
         let key = Self::bowldish_key_helper(line, thing_name, key, only_first)?;
 
-        Ok(things.entry(key).or_insert_with(|| ValueStack::new(key)))
+        Ok(things.entry(key).or_insert_with(|| ValueStack::new()))
     }
 
     fn bowldish_key_helper(

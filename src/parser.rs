@@ -4,7 +4,6 @@ use TokenKind::*;
 
 use num_bigint::BigInt;
 
-use std::array::IntoIter;
 use std::convert::TryInto;
 use std::iter::Peekable;
 use std::num::NonZeroU32;
@@ -652,7 +651,7 @@ impl<T: Iterator<Item = Token>> Parser<T> {
 
     /// Expects all the TokenKinds in the given array, in that order.
     fn expect_multiple<const N: usize>(&mut self, kinds: [TokenKind; N]) -> Result<()> {
-        let kinds = IntoIter::new(kinds);
+        let kinds = IntoIterator::into_iter(kinds);
 
         for kind in kinds {
             self.expect(kind)?;
