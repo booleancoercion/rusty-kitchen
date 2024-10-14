@@ -119,6 +119,10 @@ impl<'a> FirstPassLexer<'a> {
             self.advance();
         }
 
+        if self.is_at_end() {
+            // Easiest fix for now to handle trailing newlines.
+            return;
+        }
         if count == 1 {
             self.add_subtoken(SubTokenKind::NewLine);
         } else {
