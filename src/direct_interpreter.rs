@@ -85,9 +85,7 @@ pub struct ValueStack {
 
 impl ValueStack {
     fn new() -> Self {
-        Self {
-            values: vec![],
-        }
+        Self { values: vec![] }
     }
 
     fn push(&mut self, val: Value) {
@@ -354,16 +352,12 @@ impl<'a> RecipeRunner<'a> {
                 for stmt in stmts {
                     match stmt.kind {
                         SetAside => break 'outer,
-                        Refrigerate(n) => {
-                            self.refrigerated = true;
-                            if let Some(n) = n {
-                                self.print(n);
-                            }
-                            break 'outer;
-                        }
                         _ => {}
                     }
                     self.execute_stmt(stmt)?;
+                    if self.refrigerated {
+                        break 'outer;
+                    }
                 }
 
                 if let Some(name) = igdt2 {
