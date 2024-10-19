@@ -80,16 +80,12 @@ pub struct Value {
 
 #[derive(Clone, Debug)]
 pub struct ValueStack {
-    pub number: NonZeroU32,
     pub values: Vec<Value>,
 }
 
 impl ValueStack {
-    fn new(number: NonZeroU32) -> Self {
-        Self {
-            number,
-            values: vec![],
-        }
+    fn new() -> Self {
+        Self { values: vec![] }
     }
 
     fn push(&mut self, val: Value) {
@@ -356,16 +352,12 @@ impl<'a> RecipeRunner<'a> {
                 for stmt in stmts {
                     match stmt.kind {
                         SetAside => break 'outer,
-                        Refrigerate(n) => {
-                            self.refrigerated = true;
-                            if let Some(n) = n {
-                                self.print(n);
-                            }
-                            break 'outer;
-                        }
                         _ => {}
                     }
                     self.execute_stmt(stmt)?;
+                    if self.refrigerated {
+                        break 'outer;
+                    }
                 }
 
                 if let Some(name) = igdt2 {
@@ -472,7 +464,7 @@ impl<'a> RecipeRunner<'a> {
     ) -> Result<&'h mut ValueStack> {
         let key = Self::bowldish_key_helper(line, thing_name, key, only_first)?;
 
-        Ok(things.entry(key).or_insert_with(|| ValueStack::new(key)))
+        Ok(things.entry(key).or_insert_with(|| ValueStack::new()))
     }
 
     fn bowldish_key_helper(
